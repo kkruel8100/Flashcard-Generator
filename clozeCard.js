@@ -7,84 +7,93 @@ var clozeCards = function(fullText, cloze, partial) {
   this.partial = fullText.replace(cloze, "...");
 };
 
+var clozeArray = [];
+
 function createCloze() {
-  inquirer.prompt([{
-    name: "fullText",
-    message: "What statement do you want on your flashcard?"
-  }, {
-    name: "cloze",
-    message: "What text do you want removed?"
-  }]).then(function(answers) {
-    var clozeCard = new clozeCards(answers.fullText, answers.cloze);
-    fs.appendFile("cloze.txt", JSON.stringify({ fulltext: clozeCard.fullText, cloze: clozeCard.cloze, partial: clozeCard.partial }), function(err) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Content Added!");
+  fs.readFile("cloze.txt", "utf8", function(err, data) {
+    if (err) {
+      console.log(err);
+    }
+    if (data) {
+      myData = JSON.parse(data);
+
+      for (i = 0; i < myData.length; i++) {
+        clozeArray.push(myData[i]);
+      }
+    }
+  });
+  subCreate();
+
+  function subCreate() {
+
+    inquirer.prompt([{
+      name: "fullText",
+      message: "What statement do you want on your flashcard?"
+    }, {
+      name: "cloze",
+      message: "What text do you want removed?"
+    }]).then(function(answers) {
+      var clozeCard = new clozeCards(answers.fullText, answers.cloze);
+      clozeArray.push(clozeCard);
+
+      inquirer.prompt([{
+        name: "confirm",
+        type: "confirm",
+        message: "Would you like to make a another flashcard?"
+      }]).then(function(next) {
+        if (next.confirm === true) {
+          subCreate();
+        } else {
+          console.log("You have finished making flashcards.");
+          fs.writeFile("cloze.txt", JSON.stringify(clozeArray, null, 4), function(err) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("Content Added!");
+            }
+          });
+        }
+      });
+    });
+  }
+}
+
+function getCloze(data) {
+  fs.readFile("cloze.txt", "utf8", function(err, data) {
+    if (err) {
+      console.log(err);
+    }
+    myData = JSON.parse(data);
+    var length = myData.length;
+    var random = Math.floor((Math.random() * length));
+
+    inquirer.prompt([{
+      name: "front",
+      message: myData[random].partial + " <press enter>"
+    }, {
+      name: "confirm",
+      type: "confirm",
+      message: "Ready for answer?"
+    }]).then(function(answers) {
+      if (answers.confirm === true) {
+        console.log(myData[random].fullText);
         inquirer.prompt([{
           name: "confirm",
           type: "confirm",
-          message: "Would you like to make a another flashcard?"
+          message: "Would you like another flashcard?"
         }]).then(function(next) {
           if (next.confirm === true) {
-            createCloze();
+            getCloze(data);
           } else {
-            console.log("You have finished making flashcards.");
+            console.log("Study Session Over.");
           }
         });
+      } else {
+        console.log("Study Session Over - Come back when you have more time.");
       }
     });
   });
 }
-
-function getCloze(data) {
-  console.log(data);
-  console.log(data.length);
-
-}
-
-
-// var a = [];
-// var b = [];
-
-// console.log(data);
-// return Array.from(data);
-
-// var cards = JSON.stringify(data);
-// console.log(cards);// // a.push(data);
-// console.log(a);
-// console.log(a.length);
-// b = a.replace(/'/g, "");
-// console.log(b);
-// console.log(b.length);
-// console.log("Some text");
-// if (data.constructor == Array) {
-//   console.log("Im array")
-// } else if (data.constructor == Object) {
-//   console.log("I'm object");
-// } else if (data.constructor == String) {
-//   console.log("i'm a string");
-// } else {
-//   console.log("Im not either");
-
-// }
-// console.log(cards);
-// 
-// var numberOfCards = Object.keys(cards).length;
-// console.log(numberOfCards);
-
-
-// fs.readFile('log.txt', 'utf8', function(err, data) {
-
-// console.log(studyCloze);
-// 
-//   Math random
-//   fs.readFile clozeCards.partial
-//   waiting
-//   for input
-//   user input === clozeCards.cloze
-//   regEx101.com
-//   function
 
 module.exports = {
   clozeCards,

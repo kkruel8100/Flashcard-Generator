@@ -1,0 +1,37 @@
+[
+    {
+        "fullText": "The Labrador Retriever is the most popular breed of dog in the United States.",
+        "cloze": "Labrador Retriever",
+        "partial": "The ... is the most popular breed of dog in the United States."
+    },
+    {
+        "fullText": "A group of lions is called a pride.",
+        "cloze": "pride",
+        "partial": "A group of lions is called a ...."
+    },
+    {
+        "fullText": "The Reticulated python is the longest snake ever held in capitivity.",
+        "cloze": "Reticulated python",
+        "partial": "The ... is the longest snake ever held in capitivity."
+    },
+    {
+        "fullText": "An African elephant has the largest ears.",
+        "cloze": "African elephant",
+        "partial": "An ... has the largest ears."
+    },
+    {
+        "fullText": "A stork is often associated with delivering babies.",
+        "cloze": "stork",
+        "partial": "A ... is often associated with delivering babies."
+    },
+    {
+        "fullText": "The Koala is the sleepiest animal in the world, sleeping around 22 hours each day.",
+        "cloze": "Koala",
+        "partial": "The ... is the sleepiest animal in the world, sleeping around 22 hours each day."
+    },
+    {
+        "fullText": "In South Florida, alligators and crocodiles can be found together in the wild.",
+        "cloze": "South Florida",
+        "partial": "In ..., alligators and crocodiles can be found together in the wild."
+    }
+]

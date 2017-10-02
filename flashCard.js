@@ -5,10 +5,6 @@ var fs = require("fs");
 
 var choices = ["basic", "cloze"];
 
-var length = 10;
-var random = Math.floor((Math.random() * length) + 1);
-console.log(random);
-
 inquirer.prompt([{
   name: "choice",
   type: "list",
@@ -40,23 +36,11 @@ inquirer.prompt([{
     }]).then(function(responseCard) {
       if (responseCard.card === "basic") {
         console.log("You picked study with basic flashcards");
-        fs.readFile("basic.txt", "utf8", function(err, data) {
-          if (err) {
-            console.log(err);
-          }
-          myData = JSON.parse(data);
-          basicCard.getBasic(myData);
-          // console.log(myData.length);
-        });
+        basicCard.getBasic();
 
       } else if (responseCard.card === "cloze") {
         console.log("You picked study with cloze flashcards");
-        fs.readFile("cloze.txt", "utf8", function(err, data) {
-          if (err) {
-            console.log(err);
-          }
-          clozeCard.getCloze(data);
-        });
+        clozeCard.getCloze();
       }
     });
   }

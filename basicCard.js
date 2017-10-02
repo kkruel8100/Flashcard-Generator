@@ -6,72 +6,92 @@ var basicCard = function(front, back) {
   this.back = back;
 };
 
-var cardArray = [];
+var basicArray = [];
 
 function createBasic() {
+  fs.readFile("basic.txt", "utf8", function(err, data) {
+    if (err) {
+      console.log(err);
+    }
+    if (data) {
+      myData = JSON.parse(data);
 
-  inquirer.prompt([{
-    name: "front",
-    message: "What question do you want on your flashcard?"
-  }, {
-    name: "back",
-    message: "What is the answer to your question?"
-  }]).then(function(answers) {
-    // var basic = new basicCard(JSON.stringify(answers.front).replace(/"/g, ''), JSON.stringify(answers.back).replace(/"/g, ''));
-    var basic = new basicCard(answers.front, answers.back);
-    cardArray.push(basic);
+      for (i = 0; i < myData.length; i++) {
+        basicArray.push(myData[i]);
+      }
+    }
+  });
+  subCreate();
 
+  function subCreate() {
+    inquirer.prompt([{
+      name: "front",
+      message: "What question do you want on your flashcard?"
+    }, {
+      name: "back",
+      message: "What is the answer to your question?"
+    }]).then(function(answers) {
+      var basic = new basicCard(answers.front, answers.back);
+      basicArray.push(basic);
+
+      inquirer.prompt([{
+        name: "confirm",
+        type: "confirm",
+        message: "Would you like to make a another flashcard?"
+      }]).then(function(next) {
+
+        if (next.confirm === true) {
+          subCreate();
+        } else {
+          console.log("You have finished making flashcards.");
+          fs.writeFile("basic.txt", JSON.stringify(basicArray, null, 4), function(err) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("Content Added!");
+            }
+          });
+        }
+      });
+    });
+  }
+}
+
+function getBasic(data) {
+  fs.readFile("basic.txt", "utf8", function(err, data) {
+    if (err) {
+      console.log(err);
+    }
+    myData = JSON.parse(data);
+    var length = myData.length;
+    var random = Math.floor((Math.random() * length));
 
     inquirer.prompt([{
+      name: "front",
+      message: myData[random].front + " <press enter>"
+    }, {
       name: "confirm",
       type: "confirm",
-      message: "Would you like to make a another flashcard?"
-    }]).then(function(next) {
-      if (next.confirm === true) {
-        createBasic();
-      } else {
-        console.log("You have finished making flashcards.");
-        fs.appendFile("basic.txt", JSON.stringify(cardArray, null, 4), function(err) {
-          // fs.appendFile("basic.txt", JSON.stringify({ front: basic.front, back: basic.back }, null, 4), function(err) {
-          if (err) {
-            console.log(err);
+      message: "Ready for answer?"
+    }]).then(function(answers) {
+      if (answers.confirm === true) {
+        console.log(myData[random].back);
+        inquirer.prompt([{
+          name: "confirm",
+          type: "confirm",
+          message: "Would you like another flashcard?"
+        }]).then(function(next) {
+          if (next.confirm === true) {
+            getBasic(data);
           } else {
-            console.log("Content Added!");
+            console.log("Study Session Over.");
           }
-
         });
-        // console.log(cardArray.length);
+      } else {
+        console.log("Study Session Over - Come back when you have more time.");
       }
     });
   });
-}
-
-var test = [];
-
-function getBasic(data) {
-  console.log(data.length);
-  console.log(data[0].back);
-  // var objEnd = new Regex('/(}{)/', 'g');
-  // var data = data.replace(objEnd, '},{');
-  // test.push(data);
-  // console.log(test.length);
-
-  // var result = JSON.parse(data);
-
-  // var myObj = JSON.parse(data);
-  // console.log(myObj);
-  // console.log(myObj.length);
-  // var arr = wrapArray(data);
-  // // console.log(arr);
-  // // var result = JSON.stringify(data);
-  // // console.log(result);
-  // console.log(arr);
-  // console.log(data.length);
-  // test.push(data);
-  // console.log(test);
-  // console.log("Length: " + test.length);
-  // var frontQ = test.map(single => `${single.front}`);
-  // console.log(frontQ);
 }
 
 module.exports = {
