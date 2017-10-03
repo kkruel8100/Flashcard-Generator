@@ -1,6 +1,6 @@
 # Flashcard-Generator and Study
 
-The app has two components using a Node module:<br/>
+The app has three components using a Node module:<br/>
 
 1. Allows the user to generate flashcards either a basic or a cloze-deleted type. <br/>
 
@@ -13,3 +13,5 @@ Cloze-Deleted flashcards, which present partial text ("... was the first preside
 2. Allows the user to study the flashcards stored in the system. <br/>
 
 The app can be started with node flashCard.js.
+
+3.  Allows the user to delete flashcards.

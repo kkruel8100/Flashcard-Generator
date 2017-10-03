@@ -1,5 +1,6 @@
 var basicCard = require("./basicCard.js");
 var clozeCard = require("./clozeCard.js");
+var deleteCard = require("./deleteCard.js");
 var inquirer = require("inquirer");
 var fs = require("fs");
 
@@ -9,7 +10,7 @@ inquirer.prompt([{
   name: "choice",
   type: "list",
   message: "What would you like to do?",
-  choices: ["create a flashcard", "study"]
+  choices: ["create a flashcard", "study", "delete a flashcard"]
 }]).then(function(response) {
   if (response.choice === "create a flashcard") {
     inquirer.prompt([{
@@ -26,7 +27,7 @@ inquirer.prompt([{
         clozeCard.createCloze();
       }
     });
-  } else {
+  } else if (response.choice === "study") {
     console.log("You picked " + response.choice);
     inquirer.prompt([{
       name: "card",
@@ -43,5 +44,7 @@ inquirer.prompt([{
         clozeCard.getCloze();
       }
     });
+  } else if (response.choice === "delete a flashcard") {
+    deleteCard.deleteCard();
   }
 });
